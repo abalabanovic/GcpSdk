@@ -28,28 +28,28 @@ REGION="us-central1"
 SUBNET_IP="10.0.1.0/24"
 
 #Create VPC network with custom subnet
-#gcloud compute networks create $VPC_NAME --subnet-mode=custom
+gcloud compute networks create $VPC_NAME --subnet-mode=custom
 
 #Creat subnet for VPC
-#gcloud compute networks subnets create $SUBNET_NAME \
-#--network=$VPC_NAME \
-#--region=$REGION \
-#--range=$SUBNET_IP
+gcloud compute networks subnets create $SUBNET_NAME \
+--network=$VPC_NAME \
+--region=$REGION \
+--range=$SUBNET_IP
 
 echo "VPC and Subnet created succesfully"
 
 #Create firewall rules for VPC
 
-#gcloud compute firewall-rules create allow-ssh-traffic \
-#--network=$VPC_NAME \
-#--allow=tcp:22 \
-#--source-ranges=0.0.0.0/0
+gcloud compute firewall-rules create allow-ssh-traffic \
+--network=$VPC_NAME \
+--allow=tcp:22 \
+--source-ranges=0.0.0.0/0
 
-#gcloud compute firewall-rules create allow-http-traffic \
-#--network=$VPC_NAME \
-#--allow=tcp:80 \
-#--source-ranges=0.0.0.0/0 \
-#--target-tags=http-server
+gcloud compute firewall-rules create allow-http-traffic \
+--network=$VPC_NAME \
+--allow=tcp:80 \
+--source-ranges=0.0.0.0/0 \
+--target-tags=http-server
 
 echo "Firewall rules created!"
 
@@ -59,9 +59,9 @@ GCR_NAME="spring-pet-clinic"
 PROJECT_NAME=$(gcloud config get-value project)
 
 
-#gcloud artifacts repositories create $GCR_NAME \
-#--repository-format=docker \
-#--location=$REGION
+gcloud artifacts repositories create $GCR_NAME \
+--repository-format=docker \
+--location=$REGION
 
 echo "Artifact repository created"
 
@@ -71,7 +71,7 @@ echo "Artifact repository created"
 #sudo docker build -t $DOCKER_REPO .
 #sudo docker push $DOCKER_REPO
 
-#Create bucket and copy script to the bucket
+Create bucket and copy script to the bucket
 gsutil mb -p gd-gcp-internship-devops gs://my-startup-scripts/
 gsutil cp /home/osboxes/spring-petclinic/startup-script.sh gs://my-startup-scripts/startup-script.sh
 echo "Bucket created and script is copied to bucket!"
@@ -83,8 +83,8 @@ gcloud compute instances create spring-web \
 --subnet=$SUBNET_NAME \
 --zone="$REGION-a" \
 --tags=http-server \
---metadata startup-script-url=gs://my-startup-scripts/startup-script.sh \
---metadata-from-file env=<(env)
+--metadata-from-file env=<(env) \
+--metadata startup-script-url=gs://my-startup-scripts/startup-script.sh
 
 # Echo public ip
 gcloud compute instances describe spring-web --zone="$REGION-a" --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
